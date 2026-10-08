@@ -1,0 +1,5 @@
+faster-whisper==1.2.1
+# av 16+ rompe faster-whisper 1.2.1 (open() ya no acepta metadata_errors)
+av<16
+# arrastrar y soltar en la ventana (app.pyw)
+tkinterdnd2==0.6.3
