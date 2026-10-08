@@ -1,3 +1,6 @@
+# Transcriptor de audios - Copyright (C) 2026 jhoel0521
+# Licencia: GPL v3 o posterior, con permiso adicional. Ver LICENSE y EXCEPCION-GPL.md.
+
 """Compila la app portable en dist/Transcriptor/ (Transcriptor.exe + modelos/).
 
 Uso (con el entorno instalado):

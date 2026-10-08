@@ -20,7 +20,10 @@ No adjuntes audios con información privada.
 4. Prueba que funcione: abre la ventana con `python app.pyw` y transcribe un audio.
 5. Haz commit y abre un *pull request* explicando qué cambiaste y por qué.
 
-GitHub compila automáticamente tu pull request en Windows, Mac y Linux para comprobar que nada se rompió.
+Todos los cambios entran a `main` por pull request: nadie sube directo a `main`.
+
+Si agregas una biblioteca nueva, revisa que su licencia sea compatible con GPL v3 (MIT, BSD, Apache 2.0, LGPL, GPL)
+y anótala en [TERCEROS.md](TERCEROS.md).
 
 ## Estilo
 

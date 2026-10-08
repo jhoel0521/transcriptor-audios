@@ -1,3 +1,6 @@
+# Transcriptor de audios - Copyright (C) 2026 jhoel0521
+# Licencia: GPL v3 o posterior, con permiso adicional. Ver LICENSE y EXCEPCION-GPL.md.
+
 """Ventana para transcribir audios con Whisper local.
 
 Abrir con doble clic en "Transcriptor.bat" o:

@@ -1,3 +1,6 @@
+# Transcriptor de audios - Copyright (C) 2026 jhoel0521
+# Licencia: GPL v3 o posterior, con permiso adicional. Ver LICENSE y EXCEPCION-GPL.md.
+
 """Transcribe audios (WhatsApp .ogg, .mp3, .m4a, .wav...) a texto con Whisper local.
 
 Uso:

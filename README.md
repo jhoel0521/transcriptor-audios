@@ -6,7 +6,7 @@ Convierte audios a texto (por ejemplo, las notas de voz de WhatsApp) con [Whispe
 - Ventana simple: eliges o arrastras un audio y el texto aparece en pantalla, listo para copiar.
 - Muy buena calidad en español (también detecta otros idiomas).
 - Acepta audios de cualquier duración: `.ogg`, `.opus`, `.mp3`, `.m4a`, `.wav`, `.mp4`, `.webm`, `.flac`, `.aac`.
-- Funciona en **Windows**, **Mac** y **Linux**.
+- Funciona en **Windows**, **Linux** y **Mac**.
 
 ## Descargar
 
@@ -14,9 +14,9 @@ Entra a **[Releases](../../releases/latest)** y baja el `.zip` de tu sistema:
 
 | Sistema | Archivo | Cómo abrirlo |
 |---|---|---|
-| Windows | `Transcriptor-Windows.zip` | Descomprime y doble clic en `Transcriptor.exe` |
-| Mac | `Transcriptor-Mac.zip` | Descomprime y abre `Transcriptor.app` (ver nota abajo) |
-| Linux | `Transcriptor-Linux.zip` | Descomprime y ejecuta `Transcriptor/Transcriptor` |
+| Windows 10 u 11 (64 bits) | `Transcriptor-Windows.zip` | Descomprime y doble clic en `Transcriptor.exe` |
+| Linux (64 bits) | `Transcriptor-Linux.zip` | Descomprime y ejecuta `Transcriptor/Transcriptor` |
+| Mac | No hay programa compilado todavía | Usa el programa desde el código (ver abajo) |
 
 No hay que instalar nada: es una carpeta portable que puedes copiar a un USB o a otra PC.
 
@@ -26,12 +26,9 @@ Puede tardar varios minutos según tu internet. Después ya no lo vuelve a desca
 ### Avisos de seguridad (normales en programas sin firma digital)
 
 - **Windows** puede mostrar "Windows protegió su PC": haz clic en **Más información** y luego en **Ejecutar de todas formas**.
-- **Mac** puede decir que no se puede abrir porque es de un desarrollador no identificado:
-  clic derecho sobre `Transcriptor.app` > **Abrir** > **Abrir**.
-  Si dice que "está dañado", ejecuta en la Terminal: `xattr -cr Transcriptor.app`
 
-El programa se compila automáticamente en GitHub a partir del código de este repositorio,
-así que cualquiera puede revisar exactamente qué hace.
+El programa se compila a partir del código de este repositorio, así que cualquiera puede revisar exactamente qué hace,
+o compilarlo por su cuenta (ver "Compilar el programa").
 
 ## Cómo se usa
 
@@ -86,7 +83,8 @@ python compilar.py
 ```
 
 El resultado queda en `dist/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro para que funcione sin internet.
-Al publicar una etiqueta de versión (por ejemplo `v1.0.0`), GitHub compila para los tres sistemas y crea el Release solo.
+
+Cada sistema se compila en ese mismo sistema: PyInstaller no puede crear un programa de Mac desde Windows, ni al revés.
 
 ## Archivos del proyecto
 
@@ -95,10 +93,10 @@ Al publicar una etiqueta de versión (por ejemplo `v1.0.0`), GitHub compila para
 | `app.pyw` | La ventana |
 | `transcribir.py` | La transcripción (la usa la ventana, y también funciona sola desde la terminal) |
 | `compilar.py` | Genera el programa portable con PyInstaller |
-| `.github/workflows/compilar.yml` | Compila en GitHub para Windows, Mac y Linux |
 
 ## Planes a futuro
 
+- **Programa compilado para Mac.** Hace falta alguien con una Mac que lo compile y lo pruebe.
 - **App para Android y iPhone.** Este código no puede correr en teléfonos, pero se puede hacer una app aparte usando
   [whisper.cpp](https://github.com/ggerganov/whisper.cpp), que sí funciona en móviles. ¡Se aceptan ayudas!
 - Abrir el programa directamente desde "Compartir" en WhatsApp de escritorio.
@@ -110,8 +108,11 @@ Al publicar una etiqueta de versión (por ejemplo `v1.0.0`), GitHub compila para
 
 ## Licencia
 
-[GPL v3](LICENSE): puedes usar, copiar y modificar este programa libremente. Si distribuyes una versión modificada,
-debes publicar también su código bajo la misma licencia.
+[GPL v3 o posterior](LICENSE), con un [permiso adicional](EXCEPCION-GPL.md) para las bibliotecas OpenSSL e Intel OpenMP
+que vienen incluidas en el programa compilado. Puedes usar, copiar y modificar este programa libremente.
+Si distribuyes una versión modificada, debes publicar también su código bajo la misma licencia.
+
+Los componentes de terceros que incluye el programa compilado y sus licencias están en [TERCEROS.md](TERCEROS.md).
 
 ## Créditos
 
