@@ -1,0 +1,12 @@
+.git/
+.venv/
+build/
+dist/
+modelos/
+transcripciones/
+__pycache__/
+*.ogg
+*.opus
+*.mp3
+*.m4a
+*.wav
