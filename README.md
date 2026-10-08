@@ -108,6 +108,11 @@ Al publicar una etiqueta de versión (por ejemplo `v1.0.0`), GitHub compila para
 
 ¿Encontraste un error o tienes una idea? Abre un [issue](../../issues). Si quieres mejorar el código, mira [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Licencia
+
+[GPL v3](LICENSE): puedes usar, copiar y modificar este programa libremente. Si distribuyes una versión modificada,
+debes publicar también su código bajo la misma licencia.
+
 ## Créditos
 
 - [faster-whisper](https://github.com/SYSTRAN/faster-whisper) y el modelo Whisper de OpenAI.
