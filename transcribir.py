@@ -37,8 +37,20 @@ def formato_tiempo(segundos):
     return f"{m:02d}:{s:02d}"
 
 
+def carpeta_programa():
+    """Carpeta del .exe si está compilado; si no, la de este archivo."""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+    return Path(__file__).parent
+
+
 def cargar_modelo(nombre="large-v3-turbo"):
-    return WhisperModel(nombre, device="cpu", compute_type="int8")
+    # Los modelos viven en "modelos/" junto al programa, así la carpeta es portable.
+    modelos = carpeta_programa() / "modelos"
+    local = modelos / nombre
+    if (local / "model.bin").exists():
+        return WhisperModel(str(local), device="cpu", compute_type="int8")
+    return WhisperModel(nombre, device="cpu", compute_type="int8", download_root=str(modelos))
 
 
 def transcribir_audio(modelo, ruta, idioma="es"):

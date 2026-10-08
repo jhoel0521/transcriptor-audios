@@ -1,105 +1,68 @@
 # Transcriptor de audios
 
 Convierte audios (por ejemplo, los de WhatsApp) a texto con Whisper, en tu propia computadora y gratis.
-No necesita internet, salvo la primera vez para descargar el modelo (unos 800 MB), y los audios no salen de tu equipo.
+Funciona sin internet y los audios no salen de tu equipo.
 
-Funciona en **Windows**, **Linux** y **Mac**. No funciona en iPhone ni en Android.
+## Usar el programa (Windows)
 
-## 1. Descargar el proyecto
+El programa es **portable**: una carpeta `Transcriptor` con `Transcriptor.exe` adentro.
+No hay que instalar nada. Se puede copiar a otra PC o a un USB y funciona igual.
 
-```bash
-git clone https://github.com/jhoel0521/transcriptor-audios.git
-cd transcriptor-audios
-```
-
-## 2. Instalar (una sola vez)
-
-Necesitas Python 3.10 o más reciente.
-
-### Windows
-
-```bash
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
-powershell -ExecutionPolicy Bypass -File crear_accesos.ps1
-```
-
-La última línea crea el ícono **"Transcriptor de audios"** (un micrófono azul) en el escritorio y en el menú Inicio.
-
-### Linux (Ubuntu, Debian, Mint)
-
-Primero instala lo que Python necesita para abrir ventanas:
-
-```bash
-sudo apt install python3-venv python3-tk
-```
-
-Después:
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-chmod +x transcriptor.sh
-```
-
-### Mac
-
-Usa el Python de python.org (ya trae lo necesario para las ventanas).
-Si usas el de Homebrew, instala antes `brew install python-tk`.
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-chmod +x transcriptor.sh
-```
-
-## 3. Abrir la ventana
-
-- **Windows:** doble clic en el ícono **"Transcriptor de audios"** del escritorio, o búscalo en el menú Inicio escribiendo "Transcriptor".
-  También puedes hacer doble clic en `Transcriptor.bat`.
-- **Linux y Mac:** en la terminal, dentro de la carpeta del proyecto:
-
-  ```bash
-  ./transcriptor.sh
-  ```
-
-## 4. Usar la ventana
-
-1. Haz clic en **"Seleccionar audio..."**, arriba a la izquierda, y elige tu audio. También puedes arrastrar el audio y soltarlo encima de la ventana.
-2. Espera. El texto va apareciendo en el cuadro grande. Un audio de 2 minutos tarda unos 40 segundos.
-3. Cuando arriba diga **"Listo"**, haz clic en **"Copiar todo"** y pega el texto donde quieras.
+1. Doble clic en **`Transcriptor.exe`** (el ícono del micrófono azul).
+2. Haz clic en **"Seleccionar audio..."** y elige el audio. También puedes arrastrar el audio encima de la ventana,
+   o encima del ícono de `Transcriptor.exe`.
+3. Espera. El texto va apareciendo y el título de la ventana muestra el avance.
+   Un audio de 2 minutos tarda alrededor de 1 minuto.
+4. Cuando diga **"Listo"**, haz clic en **"Copiar todo"** y pega el texto donde quieras.
 
 Otros botones:
 
 - **Guardar .txt...** guarda el texto en un archivo.
 - **Limpiar** borra el cuadro para empezar otro audio.
 - **Cancelar** detiene una transcripción a la mitad.
-- **Modelo:** "Preciso" (recomendado) o "Rápido" (unas 3 veces más veloz, pero se equivoca más).
+- **Modelo:** "Preciso" (recomendado, ya incluido) o "Rápido" (más veloz pero se equivoca más;
+  la primera vez lo descarga de internet, unos 500 MB).
 - **Con tiempos** agrega el minuto de cada frase, por ejemplo `[01:22]`.
 
-El primer audio tarda unos segundos más porque carga el modelo. Si dejas la ventana abierta, los siguientes van directo.
+Para tenerlo a mano: clic derecho en `Transcriptor.exe` > **Enviar a** > **Escritorio (crear acceso directo)**.
+
+## Compilar el programa (para desarrolladores)
+
+Requiere Python 3.10 o más reciente. Dentro de la carpeta del proyecto:
+
+```bash
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt pyinstaller
+.venv\Scripts\python compilar.py
+```
+
+El resultado queda en `dist/Transcriptor/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro
+para que funcione sin internet. Si no existe, el programa descarga el modelo la primera vez que se usa
+y lo guarda en `modelos/`, junto al `.exe`.
+
+## Linux y Mac
+
+No hay `.exe`; se ejecuta con Python. En Linux instala antes `sudo apt install python3-venv python3-tk`.
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python app.pyw
+```
+
+No funciona en iPhone ni en Android.
 
 ## Uso desde la terminal (opcional)
 
 Transcribe uno o varios audios, o una carpeta entera, y guarda los textos en `transcripciones/`:
 
 ```bash
-# Windows
 .venv\Scripts\python transcribir.py "audio.ogg" --salida transcripciones
-
-# Linux y Mac
-.venv/bin/python transcribir.py "audio.ogg" --salida transcripciones
 ```
 
-En Windows también puedes soltar audios encima de `transcribir.bat`.
-
-Opciones:
-
-- `--tiempos` agrega el minuto de cada frase.
-- `--mover carpeta` mueve cada audio a esa carpeta al terminar.
-- `--modelo small` es más rápido pero menos preciso.
-- `--idioma auto` detecta el idioma solo. Por defecto usa español.
+Opciones: `--tiempos`, `--mover carpeta`, `--modelo small`, `--idioma auto`.
 
 ## Privacidad
 
-Los audios y la carpeta `transcripciones/` están en `.gitignore`, así que nunca se suben al repositorio.
+Los audios, las transcripciones, los modelos y el programa compilado están en `.gitignore`;
+nunca se suben al repositorio.

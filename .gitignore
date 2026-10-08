@@ -16,3 +16,8 @@ transcripciones/
 *.webm
 *.flac
 *.aac
+
+# Programa compilado y modelos (pesan GB; se generan con compilar.py)
+build/
+dist/
+modelos/

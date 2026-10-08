@@ -27,6 +27,8 @@ try:
 except ImportError:  # sin la librería la ventana funciona igual, solo sin arrastrar y soltar
     TkinterDnD = None
 
+TITULO = "Transcriptor de audios"
+
 MODELOS = {
     "Preciso (large-v3-turbo)": "large-v3-turbo",
     "Rápido (small)": "small",
@@ -36,7 +38,7 @@ MODELOS = {
 class App:
     def __init__(self, root):
         self.root = root
-        self.root.title("Transcriptor de audios")
+        self.root.title(TITULO)
         self.root.geometry("820x600")
         self.root.minsize(560, 400)
 
@@ -200,11 +202,14 @@ class App:
                     self.var_estado.set(valor)
                 elif tipo == "progreso":
                     self.progreso["value"] = valor
+                    self.root.title(f"{valor:.0f}% - {TITULO}")
                 elif tipo == "fin":
                     self.var_estado.set(valor)
+                    self.root.title(f"{valor.split('.')[0]} - {TITULO}")
                     self._bloquear(False)
                 elif tipo == "error":
                     self.var_estado.set("Ocurrió un error.")
+                    self.root.title(f"Error - {TITULO}")
                     self._bloquear(False)
                     messagebox.showerror("Error al transcribir", valor)
         except queue.Empty:
@@ -218,12 +223,16 @@ if __name__ == "__main__":
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("transcriptor.audios")
     root = TkinterDnD.Tk() if TkinterDnD else tk.Tk()
-    icono = Path(__file__).with_name("icono.ico")
+    icono = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "icono.ico"
     if sys.platform == "win32" and icono.exists():
         root.iconbitmap(default=str(icono))
     try:
         ttk.Style().theme_use("vista")
     except tk.TclError:
         pass
-    App(root)
+    app = App(root)
+    # audios soltados encima del ícono del programa o abiertos con "Abrir con"
+    iniciales = [a for a in buscar_audios(sys.argv[1:]) if a.suffix.lower() in EXTENSIONES]
+    if iniciales:
+        root.after(200, app.iniciar, iniciales)
     root.mainloop()
