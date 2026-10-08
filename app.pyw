@@ -213,7 +213,14 @@ class App:
 
 
 if __name__ == "__main__":
+    if sys.platform == "win32":
+        # en la barra de tareas aparece como programa propio, no agrupado con Python
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("transcriptor.audios")
     root = TkinterDnD.Tk() if TkinterDnD else tk.Tk()
+    icono = Path(__file__).with_name("icono.ico")
+    if sys.platform == "win32" and icono.exists():
+        root.iconbitmap(default=str(icono))
     try:
         ttk.Style().theme_use("vista")
     except tk.TclError:

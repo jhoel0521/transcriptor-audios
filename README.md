@@ -21,7 +21,10 @@ Necesitas Python 3.10 o más reciente.
 ```bash
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File crear_accesos.ps1
 ```
+
+La última línea crea el ícono **"Transcriptor de audios"** (un micrófono azul) en el escritorio y en el menú Inicio.
 
 ### Linux (Ubuntu, Debian, Mint)
 
@@ -52,7 +55,8 @@ chmod +x transcriptor.sh
 
 ## 3. Abrir la ventana
 
-- **Windows:** doble clic en `Transcriptor.bat`.
+- **Windows:** doble clic en el ícono **"Transcriptor de audios"** del escritorio, o búscalo en el menú Inicio escribiendo "Transcriptor".
+  También puedes hacer doble clic en `Transcriptor.bat`.
 - **Linux y Mac:** en la terminal, dentro de la carpeta del proyecto:
 
   ```bash
