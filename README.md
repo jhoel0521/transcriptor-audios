@@ -1,68 +1,114 @@
 # Transcriptor de audios
 
-Convierte audios (por ejemplo, los de WhatsApp) a texto con Whisper, en tu propia computadora y gratis.
-Funciona sin internet y los audios no salen de tu equipo.
+Convierte audios a texto (por ejemplo, las notas de voz de WhatsApp) con [Whisper](https://github.com/openai/whisper),
+**en tu propia computadora y gratis**. Los audios no salen de tu equipo: después de la primera vez funciona sin internet.
 
-## Usar el programa (Windows)
+- Ventana simple: eliges o arrastras un audio y el texto aparece en pantalla, listo para copiar.
+- Muy buena calidad en español (también detecta otros idiomas).
+- Acepta audios de cualquier duración: `.ogg`, `.opus`, `.mp3`, `.m4a`, `.wav`, `.mp4`, `.webm`, `.flac`, `.aac`.
+- Funciona en **Windows**, **Mac** y **Linux**.
 
-El programa es **portable**: una carpeta `Transcriptor` con `Transcriptor.exe` adentro.
-No hay que instalar nada. Se puede copiar a otra PC o a un USB y funciona igual.
+## Descargar
 
-1. Doble clic en **`Transcriptor.exe`** (el ícono del micrófono azul).
-2. Haz clic en **"Seleccionar audio..."** y elige el audio. También puedes arrastrar el audio encima de la ventana,
-   o encima del ícono de `Transcriptor.exe`.
-3. Espera. El texto va apareciendo y el título de la ventana muestra el avance.
-   Un audio de 2 minutos tarda alrededor de 1 minuto.
-4. Cuando diga **"Listo"**, haz clic en **"Copiar todo"** y pega el texto donde quieras.
+Entra a **[Releases](../../releases/latest)** y baja el `.zip` de tu sistema:
 
-Otros botones:
+| Sistema | Archivo | Cómo abrirlo |
+|---|---|---|
+| Windows | `Transcriptor-Windows.zip` | Descomprime y doble clic en `Transcriptor.exe` |
+| Mac | `Transcriptor-Mac.zip` | Descomprime y abre `Transcriptor.app` (ver nota abajo) |
+| Linux | `Transcriptor-Linux.zip` | Descomprime y ejecuta `Transcriptor/Transcriptor` |
 
-- **Guardar .txt...** guarda el texto en un archivo.
-- **Limpiar** borra el cuadro para empezar otro audio.
-- **Cancelar** detiene una transcripción a la mitad.
-- **Modelo:** "Preciso" (recomendado, ya incluido) o "Rápido" (más veloz pero se equivoca más;
-  la primera vez lo descarga de internet, unos 500 MB).
-- **Con tiempos** agrega el minuto de cada frase, por ejemplo `[01:22]`.
+No hay que instalar nada: es una carpeta portable que puedes copiar a un USB o a otra PC.
 
-Para tenerlo a mano: clic derecho en `Transcriptor.exe` > **Enviar a** > **Escritorio (crear acceso directo)**.
+**La primera vez** que transcribes, el programa descarga el modelo de voz (1,6 GB) y lo guarda junto al programa.
+Puede tardar varios minutos según tu internet. Después ya no lo vuelve a descargar.
 
-## Compilar el programa (para desarrolladores)
+### Avisos de seguridad (normales en programas sin firma digital)
 
-Requiere Python 3.10 o más reciente. Dentro de la carpeta del proyecto:
+- **Windows** puede mostrar "Windows protegió su PC": haz clic en **Más información** y luego en **Ejecutar de todas formas**.
+- **Mac** puede decir que no se puede abrir porque es de un desarrollador no identificado:
+  clic derecho sobre `Transcriptor.app` > **Abrir** > **Abrir**.
+  Si dice que "está dañado", ejecuta en la Terminal: `xattr -cr Transcriptor.app`
+
+El programa se compila automáticamente en GitHub a partir del código de este repositorio,
+así que cualquiera puede revisar exactamente qué hace.
+
+## Cómo se usa
+
+1. Abre el programa.
+2. Haz clic en **"Seleccionar audio..."** o arrastra el audio encima de la ventana.
+3. Espera: el texto va apareciendo y el título de la ventana muestra el avance.
+   En una computadora normal, un audio de 2 minutos tarda alrededor de 1 minuto.
+4. Cuando diga **"Listo"**, haz clic en **"Copiar todo"**.
+
+Otras opciones: **Guardar .txt...**, **Limpiar**, **Cancelar**, **Con tiempos** (marca el minuto de cada frase)
+y **Modelo** ("Preciso" o "Rápido", que es más veloz pero se equivoca más).
+
+## Ejecutar desde el código
+
+Requiere Python 3.10 o más reciente. En Linux instala antes `sudo apt install python3-venv python3-tk`.
 
 ```bash
+git clone https://github.com/jhoel0521/transcriptor-audios.git
+cd transcriptor-audios
 python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt pyinstaller
-.venv\Scripts\python compilar.py
 ```
 
-El resultado queda en `dist/Transcriptor/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro
-para que funcione sin internet. Si no existe, el programa descarga el modelo la primera vez que se usa
-y lo guarda en `modelos/`, junto al `.exe`.
-
-## Linux y Mac
-
-No hay `.exe`; se ejecuta con Python. En Linux instala antes `sudo apt install python3-venv python3-tk`.
+Windows:
 
 ```bash
-python3 -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python app.pyw
+```
+
+Mac y Linux:
+
+```bash
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python app.pyw
 ```
 
-No funciona en iPhone ni en Android.
+### Desde la terminal
 
-## Uso desde la terminal (opcional)
-
-Transcribe uno o varios audios, o una carpeta entera, y guarda los textos en `transcripciones/`:
+`transcribir.py` transcribe uno o varios audios, o una carpeta entera, y guarda los textos:
 
 ```bash
-.venv\Scripts\python transcribir.py "audio.ogg" --salida transcripciones
+python transcribir.py "audio.ogg" --salida transcripciones
 ```
 
 Opciones: `--tiempos`, `--mover carpeta`, `--modelo small`, `--idioma auto`.
 
-## Privacidad
+### Compilar el programa
 
-Los audios, las transcripciones, los modelos y el programa compilado están en `.gitignore`;
-nunca se suben al repositorio.
+```bash
+python -m pip install pyinstaller pillow
+python compilar.py
+```
+
+El resultado queda en `dist/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro para que funcione sin internet.
+Al publicar una etiqueta de versión (por ejemplo `v1.0.0`), GitHub compila para los tres sistemas y crea el Release solo.
+
+## Archivos del proyecto
+
+| Archivo | Qué hace |
+|---|---|
+| `app.pyw` | La ventana |
+| `transcribir.py` | La transcripción (la usa la ventana, y también funciona sola desde la terminal) |
+| `compilar.py` | Genera el programa portable con PyInstaller |
+| `.github/workflows/compilar.yml` | Compila en GitHub para Windows, Mac y Linux |
+
+## Planes a futuro
+
+- **App para Android y iPhone.** Este código no puede correr en teléfonos, pero se puede hacer una app aparte usando
+  [whisper.cpp](https://github.com/ggerganov/whisper.cpp), que sí funciona en móviles. ¡Se aceptan ayudas!
+- Abrir el programa directamente desde "Compartir" en WhatsApp de escritorio.
+- Barra de progreso durante la descarga del modelo.
+
+## Colaborar
+
+¿Encontraste un error o tienes una idea? Abre un [issue](../../issues). Si quieres mejorar el código, mira [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Créditos
+
+- [faster-whisper](https://github.com/SYSTRAN/faster-whisper) y el modelo Whisper de OpenAI.
+- Inspirado en [ogg-speech-to-text](https://github.com/danperrout/ogg-speech-to-text) de Daniel Perrout.

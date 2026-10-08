@@ -20,7 +20,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
-from transcribir import EXTENSIONES, buscar_audios, cargar_modelo, formato_tiempo, transcribir_audio
+from transcribir import (EXTENSIONES, buscar_audios, cargar_modelo, carpeta_modelos, formato_tiempo,
+                         modelo_local, transcribir_audio)
 
 try:
     from tkinterdnd2 import DND_FILES, TkinterDnD
@@ -159,7 +160,14 @@ class App:
     def _transcribir(self, archivos, nombre_modelo, con_tiempos):
         try:
             if nombre_modelo not in self.modelos_cargados:
-                self.cola.put(("estado", f"Cargando modelo {nombre_modelo} (la primera vez se descarga)..."))
+                descargado = modelo_local(nombre_modelo) or any(
+                    carpeta_modelos().glob(f"models--*{nombre_modelo}*/snapshots/*/model.bin"))
+                if descargado:
+                    self.cola.put(("estado", f"Cargando modelo {nombre_modelo}..."))
+                else:
+                    self.cola.put(("estado", "Descargando el modelo de voz (solo la primera vez, puede tardar "
+                                             "varios minutos según tu internet)..."))
+                    self.cola.put(("titulo", f"Descargando modelo - {TITULO}"))
                 self.modelos_cargados[nombre_modelo] = cargar_modelo(nombre_modelo)
             modelo = self.modelos_cargados[nombre_modelo]
 
@@ -200,6 +208,8 @@ class App:
                     self.texto.see("end")
                 elif tipo == "estado":
                     self.var_estado.set(valor)
+                elif tipo == "titulo":
+                    self.root.title(valor)
                 elif tipo == "progreso":
                     self.progreso["value"] = valor
                     self.root.title(f"{valor:.0f}% - {TITULO}")

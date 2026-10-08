@@ -44,12 +44,26 @@ def carpeta_programa():
     return Path(__file__).parent
 
 
+def carpeta_modelos():
+    # En Mac la app (.app) no debe escribirse por dentro: los modelos van a la carpeta de datos del usuario.
+    if getattr(sys, "frozen", False) and sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "Transcriptor" / "modelos"
+    return carpeta_programa() / "modelos"
+
+
+def modelo_local(nombre):
+    """Carpeta del modelo copiado a mano en "modelos/<nombre>", o None si no está."""
+    local = carpeta_modelos() / nombre
+    return local if (local / "model.bin").exists() else None
+
+
 def cargar_modelo(nombre="large-v3-turbo"):
     # Los modelos viven en "modelos/" junto al programa, así la carpeta es portable.
-    modelos = carpeta_programa() / "modelos"
-    local = modelos / nombre
-    if (local / "model.bin").exists():
+    # Si no están, se descargan ahí la primera vez (después funciona sin internet).
+    local = modelo_local(nombre)
+    if local:
         return WhisperModel(str(local), device="cpu", compute_type="int8")
+    modelos = carpeta_modelos()
     return WhisperModel(nombre, device="cpu", compute_type="int8", download_root=str(modelos))
 
 
