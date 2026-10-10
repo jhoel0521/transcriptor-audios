@@ -19,6 +19,8 @@ from pathlib import Path
 
 from faster_whisper import WhisperModel
 
+__version__ = "1.0.0"
+
 EXTENSIONES = {".ogg", ".opus", ".mp3", ".m4a", ".wav", ".mp4", ".webm", ".flac", ".aac"}
 
 

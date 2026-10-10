@@ -15,7 +15,7 @@ Entra a **[Releases](../../releases/latest)** y baja el `.zip` de tu sistema:
 | Sistema | Archivo | Cómo abrirlo |
 |---|---|---|
 | Windows 10 u 11 (64 bits) | `Transcriptor-Windows.zip` | Descomprime y doble clic en `Transcriptor.exe` |
-| Linux (64 bits) | `Transcriptor-Linux.zip` | Descomprime y ejecuta `Transcriptor/Transcriptor` |
+| Linux (64 bits): Ubuntu 22.04+, Debian 12+, Mint 21+, Fedora 36+ | `Transcriptor-Linux.zip` | Descomprime y ejecuta `Transcriptor/Transcriptor` |
 | Mac | No hay programa compilado todavía | Usa el programa desde el código (ver abajo) |
 
 No hay que instalar nada: es una carpeta portable que puedes copiar a un USB o a otra PC.
@@ -77,14 +77,33 @@ Opciones: `--tiempos`, `--mover carpeta`, `--modelo small`, `--idioma auto`.
 
 ### Compilar el programa
 
+Cada sistema se compila en ese mismo sistema: PyInstaller no puede crear un programa de Mac desde Windows, ni al revés.
+La excepción es Linux, que se puede compilar desde cualquier sistema con Docker.
+
+**Windows** (y Mac), con el entorno instalado:
+
 ```bash
-python -m pip install pyinstaller pillow
+python -m pip install pyinstaller
 python compilar.py
 ```
 
-El resultado queda en `dist/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro para que funcione sin internet.
+El programa queda en `dist/Transcriptor/`. Si existe la carpeta `modelos/` en el proyecto, se copia adentro
+para que funcione sin internet.
 
-Cada sistema se compila en ese mismo sistema: PyInstaller no puede crear un programa de Mac desde Windows, ni al revés.
+Para armar el `.zip` que se publica en Releases (sin el modelo y con todas las licencias de terceros):
+
+```bash
+python compilar.py --publicar
+```
+
+**Linux**, con Docker, desde Windows, Mac o Linux:
+
+```bash
+docker build -f Dockerfile.linux -o dist .
+```
+
+Deja `dist/Transcriptor-Linux.zip`. Se compila sobre Ubuntu 22.04 para que funcione en Ubuntu 22.04 o superior,
+Debian 12 o superior, Mint 21 o superior y Fedora 36 o superior.
 
 ## Archivos del proyecto
 
@@ -93,6 +112,8 @@ Cada sistema se compila en ese mismo sistema: PyInstaller no puede crear un prog
 | `app.pyw` | La ventana |
 | `transcribir.py` | La transcripción (la usa la ventana, y también funciona sola desde la terminal) |
 | `compilar.py` | Genera el programa portable con PyInstaller |
+| `Dockerfile.linux` | Compila la versión de Linux dentro de Docker |
+| `licencias/` | Textos de licencias de terceros que se copian al programa compilado |
 
 ## Planes a futuro
 

@@ -23,7 +23,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
-from transcribir import (EXTENSIONES, buscar_audios, cargar_modelo, carpeta_modelos, formato_tiempo,
+from transcribir import (EXTENSIONES, __version__, buscar_audios, cargar_modelo, carpeta_modelos, formato_tiempo,
                          modelo_local, transcribir_audio)
 
 try:
@@ -31,7 +31,7 @@ try:
 except ImportError:  # sin la librería la ventana funciona igual, solo sin arrastrar y soltar
     TkinterDnD = None
 
-TITULO = "Transcriptor de audios"
+TITULO = f"Transcriptor de audios {__version__}"
 
 MODELOS = {
     "Preciso (large-v3-turbo)": "large-v3-turbo",
@@ -52,7 +52,7 @@ class App:
         self.cancelar = threading.Event()
 
         self._armar_ventana()
-        if TkinterDnD:
+        if hasattr(self.root, "drop_target_register"):
             self.root.drop_target_register(DND_FILES)
             self.root.dnd_bind("<<DropEnter>>", self._al_entrar_arrastre)
             self.root.dnd_bind("<<DropLeave>>", self._al_salir_arrastre)
@@ -235,7 +235,14 @@ if __name__ == "__main__":
         # en la barra de tareas aparece como programa propio, no agrupado con Python
         import ctypes
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("transcriptor.audios")
-    root = TkinterDnD.Tk() if TkinterDnD else tk.Tk()
+    root = None
+    if TkinterDnD:
+        try:
+            root = TkinterDnD.Tk()
+        except RuntimeError:  # falta alguna biblioteca del sistema (ej. libXcursor en Linux)
+            root = None
+    if root is None:
+        root = tk.Tk()
     icono = Path(getattr(sys, "_MEIPASS", Path(__file__).parent)) / "icono.ico"
     if sys.platform == "win32" and icono.exists():
         root.iconbitmap(default=str(icono))

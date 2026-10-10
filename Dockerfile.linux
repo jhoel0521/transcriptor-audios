@@ -1,0 +1,29 @@
+# Compila Transcriptor para Linux (64 bits) dentro de Docker, desde cualquier sistema.
+#
+#   docker build -f Dockerfile.linux -o dist .
+#
+# Deja dist/Transcriptor-Linux.zip. Se usa Ubuntu 22.04 (glibc 2.35) para que el programa
+# funcione también en distribuciones más nuevas: Ubuntu 22.04+, Debian 12+, Mint 21+, Fedora 36+.
+FROM ubuntu:22.04 AS compilacion
+
+# python3-tk: la biblioteca de ventanas; libpython3.10: la necesita PyInstaller;
+# libxcursor1: la usa arrastrar y soltar (así queda incluida en el programa);
+# binutils: PyInstaller lo usa para analizar bibliotecas nativas
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      python3 python3-venv python3-tk libpython3.10 libxcursor1 binutils \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+
+WORKDIR /src
+COPY requirements.txt .
+RUN python -m pip install --no-cache-dir --upgrade pip \
+ && python -m pip install --no-cache-dir -r requirements.txt pyinstaller
+
+COPY . .
+RUN python compilar.py --publicar
+
+FROM scratch AS salida
+COPY --from=compilacion /src/dist/Transcriptor-Linux.zip /
